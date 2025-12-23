@@ -1,0 +1,143 @@
+# ============================================
+# DOCKERFILE FOR DIABETES PREDICTION API
+# ============================================
+#
+# This Dockerfile creates a containerized version of the application.
+# It uses a multi-stage build for optimization.
+#
+# What is Docker?
+# - Packages your app + dependencies into a container
+# - Runs the same way everywhere (your laptop, AWS EC2, anywhere)
+# - No more "it works on my machine" problems
+#
+# Build command: docker build -t diabetes-prediction .
+# Run command: docker run -p 8000:8000 diabetes-prediction
+
+# ============================================
+# STAGE 1: BASE IMAGE
+# ============================================
+# Start with official Python image (lightweight version)
+FROM python:3.10-slim as base
+
+# Set environment variables
+# PYTHONUNBUFFERED: Print logs immediately (don't buffer)
+# PYTHONDONTWRITEBYTECODE: Don't create .pyc files (saves space)
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Set working directory inside container
+# All subsequent commands run from here
+WORKDIR /app
+
+# ============================================
+# STAGE 2: INSTALL DEPENDENCIES
+# ============================================
+# Copy only requirements files first
+# This layer is cached unless requirements change (faster rebuilds)
+COPY requirements.txt .
+
+# Install Python dependencies
+# --no-cache-dir: Don't cache packages (saves space)
+# --upgrade: Upgrade pip first
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# ============================================
+# STAGE 3: COPY APPLICATION CODE
+# ============================================
+# Copy application files to container
+# Order matters! Frequently changing files go last (better caching)
+
+# Copy source code
+COPY src/ ./src/
+
+# Copy FastAPI app
+COPY app/ ./app/
+
+# Copy static files (HTML/CSS/JS)
+COPY static/ ./static/
+
+# Copy configuration and data directories
+# Note: We'll mount data as a volume for flexibility
+COPY artifacts/ ./artifacts/
+
+# ============================================
+# STAGE 4: EXPOSE PORT & HEALTHCHECK
+# ============================================
+
+# Expose port 8000 (FastAPI default)
+# This documents which port the app uses
+EXPOSE 8000
+
+# Health check: Docker will ping this endpoint to verify app is running
+# Every 30s, Docker checks if /health returns 200 OK
+# If 3 consecutive checks fail, container is marked unhealthy
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+
+# ============================================
+# STAGE 5: CREATE NON-ROOT USER (Security Best Practice)
+# ============================================
+# Don't run as root user (security risk)
+# Create a dedicated user for running the app
+
+RUN useradd -m -u 1000 appuser && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# ============================================
+# STAGE 6: STARTUP COMMAND
+# ============================================
+# This command runs when container starts
+# CMD can be overridden when running container
+# ENTRYPOINT cannot be overridden (more strict)
+
+# Use uvicorn to run FastAPI app
+# --host 0.0.0.0: Listen on all network interfaces (required for Docker)
+# --port 8000: Port to run on
+# --workers 1: Number of worker processes (increase for production)
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+
+# ============================================
+# ALTERNATIVE STARTUP OPTIONS
+# ============================================
+# Uncomment these for different scenarios:
+
+# For development (auto-reload on code changes):
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+# For production (multiple workers):
+# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+
+# For production with Gunicorn (more robust):
+# CMD ["gunicorn", "app.main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+
+# ============================================
+# BUILD & RUN EXAMPLES
+# ============================================
+#
+# Build the image:
+#   docker build -t diabetes-prediction .
+#
+# Run the container:
+#   docker run -d -p 8000:8000 --name diabetes-api diabetes-prediction
+#
+# Run with volume mount (to update models without rebuilding):
+#   docker run -d -p 8000:8000 -v $(pwd)/artifacts:/app/artifacts diabetes-prediction
+#
+# View logs:
+#   docker logs diabetes-api
+#
+# Stop container:
+#   docker stop diabetes-api
+#
+# Remove container:
+#   docker rm diabetes-api
+#
+# Access container shell (debugging):
+#   docker exec -it diabetes-api /bin/bash

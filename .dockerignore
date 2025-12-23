@@ -1,0 +1,168 @@
+# ============================================
+# DOCKER IGNORE FILE
+# ============================================
+#
+# This file tells Docker which files/folders to EXCLUDE when building images.
+#
+# Why exclude files?
+# - Faster builds (less data to copy)
+# - Smaller images (saves disk space and bandwidth)
+# - Security (don't include secrets, credentials)
+#
+# How it works:
+# - Similar to .gitignore
+# - Docker won't copy these files into the container
+
+# ============================================
+# VERSION CONTROL
+# ============================================
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# ============================================
+# DOCKER FILES
+# ============================================
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# ============================================
+# JUPYTER NOTEBOOKS (Optional)
+# ============================================
+# Notebooks are for development, not needed in production container
+notebook/
+*.ipynb
+.ipynb_checkpoints/
+
+# ============================================
+# PYTHON CACHE & BYTECODE
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ============================================
+# VIRTUAL ENVIRONMENTS
+# ============================================
+# Don't copy your local venv! Container has its own
+venv/
+env/
+ENV/
+.venv/
+
+# ============================================
+# IDE & EDITOR FILES
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.history/
+
+# ============================================
+# TESTING & COVERAGE
+# ============================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+test_*.py
+*_test.py
+
+# ============================================
+# DATA FILES (Large files)
+# ============================================
+# Exclude large data files, mount as volumes instead
+# This keeps images small and flexible
+
+# Raw data (mount as volume if needed)
+data/raw/*.csv
+
+# Uncomment to exclude processed data too
+# data/processed/*.csv
+
+# Submissions (generated at runtime)
+artifacts/submissions/*.csv
+
+# ============================================
+# LOGS
+# ============================================
+*.log
+logs/
+artifacts/logs/
+
+# ============================================
+# DOCUMENTATION
+# ============================================
+# Documentation is helpful but not needed in container
+README.md
+*.md
+docs/
+
+# ============================================
+# TEMPORARY FILES
+# ============================================
+tmp/
+temp/
+*.tmp
+
+# ============================================
+# OS FILES
+# ============================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================
+# SECRETS & CREDENTIALS (CRITICAL!)
+# ============================================
+# NEVER include these in Docker images!
+.env
+.env.*
+*.pem
+*.key
+*.crt
+credentials.json
+secrets.yaml
+config/secrets/
+
+# ============================================
+# OPTIONAL: TEST & DEVELOPMENT FILES
+# ============================================
+test_api.py
+QUICKSTART_API.md
+API_IMPLEMENTATION_SUMMARY.md
+
+# ============================================
+# NOTES FOR OPTIMIZATION
+# ============================================
+#
+# Current Docker image size estimate:
+# - Base Python image: ~150MB
+# - Dependencies: ~800MB (numpy, pandas, ML libraries)
+# - Application code: ~1MB
+# - Total: ~950MB
+#
+# To reduce size:
+# 1. Use python:3.10-slim (already doing this)
+# 2. Multi-stage builds (copy only runtime files)
+# 3. Exclude notebooks and docs (already doing this)
+# 4. Use .dockerignore effectively (this file!)
+#
+# With this .dockerignore, we exclude:
+# - ~500MB of raw data
+# - ~100MB of notebooks/docs
+# - ~50MB of git history
+# - Virtual environments
+#
+# Final optimized size: ~300-400MB
