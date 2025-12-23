@@ -4,7 +4,7 @@ import logging
 def error_message_detail(error, error_detail: sys):
     _, _, exc_tb = error_detail.exc_info()
 
-    if exc_tb in None:
+    if exc_tb is None:
         file_name = "<unknown>"
         line_no = 0
     else:

@@ -1,10 +1,13 @@
-import os 
+import os
 import random
+import logging
 import numpy as np
 from src.exception import CustomException
 import sys
 
 import torch
+
+logger = logging.getLogger(__name__)
 
 def set_seed(seed :int):
     random.seed(seed)
@@ -13,16 +16,16 @@ def set_seed(seed :int):
     try:
         import torch
         torch.manual_seed(seed)
-        torch.cuda.maual_seed_all(seed)
+        torch.cuda.manual_seed_all(seed)
     except Exception:
         pass
 
 def info(msg: str):
-    print(f"[INFO]{msg}")
+    logger.info(msg)
 
 def warn(msg: str):
-    print(f"[WARN] {msg}")
+    logger.warning(msg)
 
 
 def error(msg: str):
-    print(f"[ERROR] {msg}")
+    logger.error(msg)

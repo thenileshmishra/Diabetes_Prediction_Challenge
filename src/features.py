@@ -12,18 +12,18 @@ def create_features(df: pd.DataFrame) -> pd.DataFrame:
 
     # Cardiovascular Features
     if { "systolic_bp", "diastolic_bp"}.issubset(df.columns):
-        df["pulse_pressure"] = df["systolic_bp"] - df["distolic_bp"]
+        df["pulse_pressure"] = df["systolic_bp"] - df["diastolic_bp"]
         df["pulse_pressure_ratio"] = df["pulse_pressure"]/ (df["systolic_bp"] + 1e-6)
-        df["mean_artierial_pressure"] = (
-            (df["systolic_bp"] + 2*df["distolic_bp"])/3
+        df["mean_arterial_pressure"] = (
+            (df["systolic_bp"] + 2*df["diastolic_bp"])/3
         )
     else:
         df["pulse_pressure"] = 0
         df["pulse_pressure_ratio"] = 0
-        df["mean_artierial_pressure"] = 0
+        df["mean_arterial_pressure"] = 0
 
-    if "hear_rate" in df.columns and "systolic_bp" in df.columns:
-        df['rate_pressure_product'] = df["hear_rate"]*df["systolic_bp"]
+    if "heart_rate" in df.columns and "systolic_bp" in df.columns:
+        df['rate_pressure_product'] = df["heart_rate"]*df["systolic_bp"]
     else:
         df["rate_pressure_product"] = 0
 

@@ -1,8 +1,11 @@
 import pandas as pd
+import logging
 from pathlib import Path
 from .config import RAW_DATA_DIR, PROCESSED_DATA_DIR, TRAIN_FILE, TEST_FILE
 from src.exception import CustomException
 import sys
+
+logger = logging.getLogger(__name__)
 
 
 def load_raw_data():
@@ -37,7 +40,7 @@ def basic_quality_check(train_df, test_df):
             raise CustomException("Target column 'diagnosed_diabetes' missing in train dataset")
         
         if train_df.duplicated().sum() > 0:
-            train_df.drop_duplicates(input=True)
+            train_df.drop_duplicates(inplace=True)
 
         return train_df, test_df
 
@@ -50,20 +53,20 @@ def save_processed(train_df, test_df):
     train_df.to_csv(TRAIN_FILE, index=False)
     test_df.to_csv(TEST_FILE, index=False)
 
-    print(f"Processed train saved -> {TRAIN_FILE}")
-    print(f"Processed test saved -> {TEST_FILE}")
+    logger.info(f"Processed train saved -> {TRAIN_FILE}")
+    logger.info(f"Processed test saved -> {TEST_FILE}")
 
 def run_ingestion():
-    print("Loading raw data...")
+    logger.info("Loading raw data...")
     train_df, test_df = load_raw_data()
 
-    print("Running quality checks...")
+    logger.info("Running quality checks...")
     train_df, test_df = basic_quality_check(train_df, test_df)
 
-    print("Saving processed data...")
+    logger.info("Saving processed data...")
     save_processed(train_df, test_df)
 
-    print("Ingestion completed succesfully.")
+    logger.info("Ingestion completed successfully.")
 
 if __name__ == "__main__":
     run_ingestion()

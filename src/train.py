@@ -1,5 +1,6 @@
 import os
 import joblib
+import logging
 import numpy as np
 import pandas as pd
 
@@ -16,6 +17,8 @@ from .config import (
 )
 from .features import build_train_matrix
 from .models import get_all_models
+
+logger = logging.getLogger(__name__)
 
 
 def save_fold_model(model_name, fold, model):
@@ -37,7 +40,7 @@ def cross_validate_model(model_name, model, X, y):
     scores = []
 
     for fold, (train_idx, val_idx) in enumerate(skf.split(X, y), 1):
-        print(f"\n===== {model_name.upper()} | FOLD {fold} =====")
+        logger.info(f"\n===== {model_name.upper()} | FOLD {fold} =====")
 
         X_train, X_val = X.iloc[train_idx], X.iloc[val_idx]
         y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
@@ -50,21 +53,21 @@ def cross_validate_model(model_name, model, X, y):
         fold_score = roc_auc_score(y_val, val_pred)
         scores.append(fold_score)
 
-        print(f"Fold {fold} ROC-AUC: {fold_score:.5f}")
+        logger.info(f"Fold {fold} ROC-AUC: {fold_score:.5f}")
 
         save_fold_model(model_name, fold, model)
 
-    print(f"\n{model_name.upper()} CV Mean ROC-AUC: {np.mean(scores):.5f}")
-    print(f"{model_name.upper()} CV Std: {np.std(scores):.5f}")
+    logger.info(f"\n{model_name.upper()} CV Mean ROC-AUC: {np.mean(scores):.5f}")
+    logger.info(f"{model_name.upper()} CV Std: {np.std(scores):.5f}")
 
     return oof_preds, scores
 
 
 def run_training():
-    print("Loading processed training data...")
+    logger.info("Loading processed training data...")
     df = pd.read_csv(TRAIN_FILE)
 
-    print("Building training matrix with features...")
+    logger.info("Building training matrix with features...")
     X, y, features = build_train_matrix(df)
 
     models = get_all_models()
@@ -77,5 +80,5 @@ def run_training():
         all_oof[name] = oof_preds
         all_scores[name] = scores
 
-    print("\nTraining completed successfully.")
+    logger.info("\nTraining completed successfully.")
     return all_oof, all_scores

@@ -17,7 +17,7 @@ MODEL_DIR = ARTIFACTS_DIR / "models"
 LOG_DIR = ARTIFACTS_DIR / "logs"
 SUBMISSION_DIR = ARTIFACTS_DIR / "submissions"
 
-# Ensure direcrtories exist
+# Ensure directories exist
 for path in [PROCESSED_DATA_DIR, MODEL_DIR, LOG_DIR, SUBMISSION_DIR]:
     os.makedirs(path, exist_ok=True)
 
@@ -26,7 +26,7 @@ for path in [PROCESSED_DATA_DIR, MODEL_DIR, LOG_DIR, SUBMISSION_DIR]:
 SEED  = 42
 TARGET_COL = "diagnosed_diabetes"
 
-# Corss Validation Settings
+# Cross Validation Settings
 CV_FOLDS = 5
 CV_STRATIFIED = True
 SHUFFLE = True
@@ -41,7 +41,7 @@ MODEL_NAMES = {
 #Threshold Settings
 DEFAULT_THRESHOLD = 0.55 
 
-# Ensamble WEeight
+# Ensemble Weight
 ENSEMBLE_WEIGHTS = {
     "lightgbm": 0.25,
     "xgboost": 0.30,
