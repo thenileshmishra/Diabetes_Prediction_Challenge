@@ -1,34 +1,12 @@
-# ============================================
-# DOCKER COMPOSE CONFIGURATION
-# ============================================
-#
-# Docker Compose makes it easy to run multi-container applications.
-# Even with one service, it's convenient for managing configuration.
-#
-# What is Docker Compose?
-# - Define services in YAML (easier than long docker run commands)
-# - Start everything with one command: docker-compose up
-# - Stop everything with: docker-compose down
-#
-# Commands:
-#   docker-compose up -d        # Start in background
-#   docker-compose down         # Stop and remove containers
-#   docker-compose logs -f      # View logs
-#   docker-compose restart      # Restart services
-
 version: '3.8'
-
-# ============================================
 # SERVICES DEFINITION
-# ============================================
 
 services:
   # Main API Service
   api:
-    # Build configuration
     build:
-      context: .                # Build from current directory
-      dockerfile: Dockerfile     # Use this Dockerfile
+      context: .                
+      dockerfile: Dockerfile     
 
     # Container name (easier to reference)
     container_name: diabetes-prediction-api
@@ -41,39 +19,11 @@ services:
     ports:
       - "8000:8000"
 
-    # Volume mounts (sync files between host and container)
-    # Useful for updating models without rebuilding image
     volumes:
-      # Mount artifacts directory (models, submissions)
       - ./artifacts:/app/artifacts
-
-      # Mount data directory (optional, for retraining)
-      # Uncomment if you want to retrain models inside container
-      # - ./data:/app/data
-
-      # Mount static files (optional, for quick frontend changes)
-      # Uncomment for development
-      # - ./static:/app/static
-
-    # Environment variables
-    # You can add configuration here
     environment:
       # Python environment
       - PYTHONUNBUFFERED=1
-
-      # API configuration (optional)
-      # - API_HOST=0.0.0.0
-      # - API_PORT=8000
-      # - API_WORKERS=1
-
-      # Model configuration (if you want to override defaults)
-      # - DEFAULT_THRESHOLD=0.55
-      # - CV_FOLDS=5
-
-    # Restart policy
-    # always: Always restart if stopped
-    # unless-stopped: Restart unless manually stopped
-    # on-failure: Only restart on error
     restart: unless-stopped
 
     # Health check (Docker will monitor this)
@@ -83,105 +33,19 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-    # Resource limits (optional but recommended for production)
-    # Prevents one container from consuming all resources
     deploy:
       resources:
         limits:
-          cpus: '2.0'      # Max 2 CPU cores
-          memory: 4G       # Max 4GB RAM
+          cpus: '2.0'      
+          memory: 4G      
         reservations:
-          cpus: '1.0'      # Guaranteed 1 CPU core
-          memory: 2G       # Guaranteed 2GB RAM
+          cpus: '1.0'      
+          memory: 2G       
 
     # Logging configuration
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"    # Max log file size
-        max-file: "3"      # Keep 3 log files
+        max-size: "10m"    
+        max-file: "3"     
 
-# ============================================
-# NETWORKS (Optional)
-# ============================================
-# Uncomment if you need custom networking
-# networks:
-#   diabetes-network:
-#     driver: bridge
-
-# ============================================
-# VOLUMES (Optional)
-# ============================================
-# Uncomment if you want Docker-managed volumes
-# volumes:
-#   artifacts-data:
-#   model-data:
-
-# ============================================
-# USAGE EXAMPLES
-# ============================================
-#
-# Start the application:
-#   docker-compose up -d
-#
-# View logs:
-#   docker-compose logs -f api
-#
-# Stop the application:
-#   docker-compose down
-#
-# Rebuild and restart:
-#   docker-compose up -d --build
-#
-# Scale to multiple instances (load balancing):
-#   docker-compose up -d --scale api=3
-#
-# Execute command inside container:
-#   docker-compose exec api python src/main.py --train
-#
-# Check container status:
-#   docker-compose ps
-#
-# View resource usage:
-#   docker-compose stats
-#
-# Remove everything (containers, networks, volumes):
-#   docker-compose down -v
-
-# ============================================
-# PRODUCTION DEPLOYMENT NOTES
-# ============================================
-#
-# For AWS EC2 deployment:
-#
-# 1. Install Docker and Docker Compose on EC2:
-#    sudo yum update -y
-#    sudo yum install docker -y
-#    sudo service docker start
-#    sudo usermod -a -G docker ec2-user
-#    sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#    sudo chmod +x /usr/local/bin/docker-compose
-#
-# 2. Clone your repository:
-#    git clone <your-repo-url>
-#    cd Kaggel
-#
-# 3. Ensure models are trained:
-#    python src/main.py --ingest --train
-#
-# 4. Start with Docker Compose:
-#    docker-compose up -d
-#
-# 5. Configure security group:
-#    - Allow inbound TCP on port 8000 from 0.0.0.0/0
-#    - Or use nginx reverse proxy on port 80
-#
-# 6. Optional: Add nginx reverse proxy
-#    - Install nginx: sudo yum install nginx -y
-#    - Configure: See nginx.conf example
-#    - Proxy port 80 -> 8000
-#
-# 7. Optional: Set up SSL with Let's Encrypt
-#    - Use certbot for free SSL certificates
-#    - Update nginx config for HTTPS
