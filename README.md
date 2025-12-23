@@ -8,7 +8,7 @@
 
 ---
 
-## 📊 About the Competition
+## About the Competition
 
 This project is part of the **Kaggle Playground Series Season 5 Episode 12** competition focused on diabetes prediction. The competition challenges participants to build accurate models for predicting diabetes diagnosis using various health indicators and lifestyle factors.
 
@@ -26,17 +26,17 @@ This project is part of the **Kaggle Playground Series Season 5 Episode 12** com
 
 **Key Techniques Used**:
 
-- ✅ **Ensemble Learning**: Combined 3 gradient boosting algorithms
+- **Ensemble Learning**: Combined 3 gradient boosting algorithms
   - LightGBM (weight: 0.25)
   - XGBoost (weight: 0.30)
   - CatBoost (weight: 0.45)
-- ✅ **5-Fold Cross-Validation**: Stratified K-fold for robust evaluation
-- ✅ **Feature Engineering**: Created 25+ derived features from domain knowledge
-- ✅ **Weighted Ensemble**: Optimized model weights based on validation performance
+- **5-Fold Cross-Validation**: Stratified K-fold for robust evaluation
+-  **Feature Engineering**: Created 25+ derived features from domain knowledge
+-  **Weighted Ensemble**: Optimized model weights based on validation performance
 
 ---
 
-## 🎯 Project Features
+## Project Features
 
 
 ### Machine Learning Pipeline
@@ -48,7 +48,7 @@ This project is part of the **Kaggle Playground Series Season 5 Episode 12** com
 - Comprehensive evaluation metrics
 
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 Kaggel/
@@ -78,7 +78,7 @@ Kaggel/
 ```
 
 
-## 🧠 Feature Engineering
+##  Feature Engineering
 
 ### Input Features (17)
 
@@ -104,7 +104,7 @@ Domain-driven feature creation:
 
 ---
 
-## 🎯 Model Architecture
+##  Model Architecture
 
 ### Ensemble Strategy
 
@@ -170,7 +170,7 @@ Domain-driven feature creation:
 
 ---
 
-## 📈 Competition Results
+## Competition Results
 
 **Submission Score**: 0.70102 (ROC-AUC)
 
@@ -191,7 +191,7 @@ Domain-driven feature creation:
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Machine Learning
 
@@ -205,7 +205,7 @@ Domain-driven feature creation:
 - Docker
 - Docker Compose
 
-## 📊 Dataset Information
+##  Dataset Information
 
 **Source**: [Kaggle Playground Series S5E12](https://www.kaggle.com/competitions/playground-series-s5e12)
 
@@ -225,22 +225,22 @@ Domain-driven feature creation:
 **Target Variable**: `diagnosed_diabetes` (Binary: 0 or 1)
 
 
-## 👤 Author
+##  Author
 
 **Nilesh Mishra**
 
 - GitHub: [@nileshmishra](https://github.com/nileshmishra)
 - LinkedIn: [Nilesh Mishra](https://linkedin.com/in/nileshmishra)
-- Kaggle: [Your Kaggle Profile](https://www.kaggle.com/yourusername)
+- Kaggle: [Your Kaggle Profile](https://www.kaggle.com/thenileshmishra)
 
 ---
 
-## 📝 License
+##  License
 
 This project is licensed under the MIT License.
 
-**⭐ If you find this project helpful, please star the repository!**
+** If you find this project helpful, please star the repository!**
 
-**🏆 Competition**: [Playground Series S5E12](https://www.kaggle.com/competitions/playground-series-s5e12)
+** Competition**: [Playground Series S5E12](https://www.kaggle.com/competitions/playground-series-s5e12)
 
-**📊 Score**: 0.70102 ROC-AUC
+**Score**: 0.70102 ROC-AUC
