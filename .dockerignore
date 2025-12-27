@@ -1,21 +1,4 @@
-# ============================================
-# DOCKER IGNORE FILE
-# ============================================
-#
-# This file tells Docker which files/folders to EXCLUDE when building images.
-#
-# Why exclude files?
-# - Faster builds (less data to copy)
-# - Smaller images (saves disk space and bandwidth)
-# - Security (don't include secrets, credentials)
-#
-# How it works:
-# - Similar to .gitignore
-# - Docker won't copy these files into the container
 
-# ============================================
-# VERSION CONTROL
-# ============================================
 .git/
 .gitignore
 .gitattributes
